@@ -1,12 +1,31 @@
 # object-detection
 
-Simple object detection using [YOLOv8](https://github.com/ultralytics/ultralytics) (Ultralytics).
+Real-time object detection (persons and cars) from drone footage using [YOLOv8](https://github.com/ultralytics/ultralytics), fine-tuned on the [VisDrone](https://github.com/VisDrone/VisDrone-Dataset) dataset.
+
+## Structure
+
+```
+object-detection/
+├── detect.py               ← run inference
+├── train.py                ← fine-tune model
+├── scripts/
+│   ├── download_visdrone.py   download dataset (~2.5GB)
+│   ├── prepare_visdrone.py    convert to YOLO format
+│   ├── upload_model.py        push weights to Hugging Face
+│   └── download_model.py      pull weights from Hugging Face
+├── training/
+│   └── visdrone.yaml       dataset config
+├── data/                   dataset (gitignored)
+├── videos/                 test footage
+├── requirements.txt
+└── .gitignore
+```
 
 ## Model
 
-Uses `yolov8n.pt` (nano variant) — pre-trained by Ultralytics on the [COCO dataset](https://cocodataset.org/) (118k images, 80 object categories including person, car, bicycle, dog, etc.). Downloaded automatically on first run (~6MB).
+Base model is `yolov8n.pt` (nano variant) — pre-trained by Ultralytics on [COCO](https://cocodataset.org/), then fine-tuned on VisDrone for aerial perspective detection of persons and cars.
 
-Swap `MODEL` in `main.py` for a larger variant if you need more accuracy:
+Swap `MODEL` in `detect.py` for a larger variant if you need more accuracy:
 
 | Model | Size | Speed |
 |-------|------|-------|
@@ -26,17 +45,42 @@ pip install -r requirements.txt
 
 ## Usage
 
+### Inference
+
 ```bash
 # Webcam
-python main.py
+python detect.py
 
 # Image or video file
-python main.py path/to/image.jpg
-python main.py path/to/video.mp4
+python detect.py path/to/video.mp4
 ```
 
 Results are saved to `runs/detect/`.
 
-## Fine-tuning
+### Fine-tuning on VisDrone
 
-To detect classes not in COCO, you can fine-tune the model on your own labeled dataset. See the [Ultralytics docs](https://docs.ultralytics.com/modes/train/).
+```bash
+# 1. Download dataset (~2.5GB)
+python scripts/download_visdrone.py
+
+# 2. Convert annotations to YOLO format
+python scripts/prepare_visdrone.py
+
+# 3. Train (~few hours on Apple M-series)
+python train.py
+```
+
+Best weights are saved to `runs/train/visdrone/weights/best.pt`.
+
+## Sharing the model
+
+Weights are not committed to git. Use Hugging Face Hub to share across the team:
+
+```bash
+# After training — run once
+huggingface-cli login
+python scripts/upload_model.py
+
+# Everyone else
+python scripts/download_model.py  # saves best.pt locally
+```
