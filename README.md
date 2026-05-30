@@ -9,7 +9,7 @@ object-detection/
 ├── detect.py               ← run inference
 ├── train.py                ← fine-tune model
 ├── scripts/
-│   ├── download_visdrone.py   download dataset (~2.5GB)
+│   ├── download_visdrone.py   download visdrone dataset (~2.5GB)
 │   ├── prepare_visdrone.py    convert to YOLO format
 │   ├── upload_model.py        push weights to Hugging Face
 │   └── download_model.py      pull weights from Hugging Face
