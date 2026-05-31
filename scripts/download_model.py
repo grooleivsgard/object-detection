@@ -4,7 +4,7 @@ from huggingface_hub import hf_hub_download
 from pathlib import Path
 
 HF_REPO = "groelisabeth/object-detection-visdrone"
-OUT_PATH = Path("best.pt")
+OUT_PATH = Path("visdrone.pt")
 
 
 def download() -> Path:

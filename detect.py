@@ -1,12 +1,23 @@
+from pathlib import Path
 from ultralytics import YOLO
+from huggingface_hub import hf_hub_download
 import sys
 
-MODEL = "runs/detect/runs/train/visdrone/weights/best.pt"  # nano — fast, small; swap for yolov8s/m/l/x for more accuracy
+HF_REPO = "groelisabeth/object-detection-visdrone"
+WEIGHTS = Path("visdrone.pt")
+
+
+def load_model() -> YOLO:
+    if not WEIGHTS.exists():
+        print(f"Downloading model from {HF_REPO}...")
+        path = hf_hub_download(repo_id=HF_REPO, filename="best.pt")
+        import shutil
+        shutil.copy(path, WEIGHTS)
+    return YOLO(str(WEIGHTS))
 
 
 def detect(source: str = "0") -> None:
-    """Run detection on a source: webcam index, image path, video path, or URL."""
-    model = YOLO(MODEL)
+    model = load_model()
     model.predict(source=source, show=True, save=True, conf=0.25)
 
 

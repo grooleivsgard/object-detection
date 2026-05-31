@@ -1,63 +1,80 @@
 # object-detection
 
-Real-time object detection (persons and cars) from drone footage using [YOLOv8](https://github.com/ultralytics/ultralytics), fine-tuned on the [VisDrone](https://github.com/VisDrone/VisDrone-Dataset) dataset.
+Detect persons and cars in drone footage in real time using [YOLOv8](https://github.com/ultralytics/ultralytics). The model is fine-tuned on aerial imagery so it handles the top-down drone perspective well.
 
-## Structure
+---
+
+## What you need
+
+- **Python 3.10 or newer** — [download here](https://www.python.org/downloads/)
+- **Git** — [download here](https://git-scm.com/downloads)
+---
+
+## Initial setup
+```bash
+# 1. Download this project from terminal
+git clone https://github.com/grooleivsgard/object-detection.git
+cd object-detection
+
+# 2. Create and activate a virtual environment to keep the project's dependencies isolated from the rest of your system.
+python3 -m venv .venv
+source .venv/bin/activate
+
+# 3. Install dependencies
+pip install -r requirements.txt
+
+# 4. Download the fine-tuned model
+python scripts/download_model.py
+```
+
+---
+
+## Run model
+
+On a video file:
+
+```bash
+python detect.py path/to/your-video.mp4 # Example: python detect.py videos/test.mp4
+```
+
+On your camera source:
+
+```bash
+python detect.py
+```
+
+Results are also saved to `runs/detect/`.
+
+---
+
+## Project structure
 
 ```
 object-detection/
-├── detect.py               ← run inference
+├── detect.py               ← run this to detect objects
+├── train.py                ← fine-tune the model (advanced)
 ├── scripts/
-│   ├── train.py               ← fine-tune model
-│   ├── download_visdrone.py   download visdrone dataset (~2.5GB)
-│   ├── prepare_visdrone.py    convert to YOLO format
-│   ├── upload_model.py        push weights to Hugging Face
-│   └── download_model.py      pull weights from Hugging Face
+│   ├── download_model.py      download model weights from Hugging Face
+│   ├── upload_model.py        upload trained weights to Hugging Face
+│   ├── download_visdrone.py   download the VisDrone training dataset
+│   └── prepare_visdrone.py    convert dataset to YOLO format
 ├── training/
-│   └── visdrone.yaml       dataset config
-├── data/                   dataset (gitignored)
-├── videos/                 test footage
-├── requirements.txt
-└── .gitignore
+│   └── visdrone.yaml       dataset config used during training
+├── slurm/
+│   └── train.sh            job script for running training on a compute cluster
+├── data/                   dataset lives here (not tracked by git)
+├── videos/                 put your drone footage here
+└── requirements.txt        Python dependencies
 ```
 
-## Model
+---
 
-Base model is `yolov8n.pt` (nano variant) — pre-trained by Ultralytics on [COCO](https://cocodataset.org/), then fine-tuned on VisDrone for aerial perspective detection of persons and cars.
+## How it works (short version)
 
-Swap `MODEL` in `detect.py` for a larger variant if you need more accuracy:
+The model is based on **YOLOv8** (You Only Look Once), a fast object detection architecture. It was originally trained on [COCO](https://cocodataset.org/) — a large dataset of everyday images — and then fine-tuned on [VisDrone](https://github.com/VisDrone/VisDrone-Dataset), a dataset of images and videos captured from drones. This makes it much better at detecting small objects from above compared to the base COCO model.
 
-| Model | Size | Speed |
-|-------|------|-------|
-| yolov8n | ~6MB | fastest |
-| yolov8s | ~22MB | fast |
-| yolov8m | ~52MB | balanced |
-| yolov8l | ~87MB | accurate |
-| yolov8x | ~131MB | most accurate |
+---
 
-## Setup
-```bash
-python3 -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
-```
+## Fine-tuning on your own data
 
-## Usage
-
-### Inference
-
-```bash
-# Webcam
-python detect.py
-
-# Image or video file
-python detect.py path/to/video.mp4
-```
-
-Results are saved to `runs/detect/`.
-
-
-# Everyone else
-python scripts/download_model.py  # saves best.pt locally
-```
-
+If you want to re-train the model, see the job script in `scripts/train.py` for the training configuration.
