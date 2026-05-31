@@ -47,7 +47,7 @@ Results are also saved to `runs/detect/`.
 
 ### For inference on-device:
 
-There seems to be two options four your device:
+There seems to be two options for your device:
 
 #### Option 1:
 ----------
@@ -83,7 +83,7 @@ object-detection/
 
 ---
 
-## How it works (short version)
+## How it works
 
 The model is based on **YOLOv8** (You Only Look Once), a fast object detection architecture. It was originally trained on [COCO](https://cocodataset.org/) — a large dataset of everyday images — and then fine-tuned on [VisDrone](https://github.com/VisDrone/VisDrone-Dataset), a dataset of images and videos captured from drones. This makes it much better at detecting small objects from above compared to the base COCO model.
 
