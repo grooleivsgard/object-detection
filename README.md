@@ -49,11 +49,11 @@ Results are also saved to `runs/detect/`.
 
 There seems to be two options four your device:
 
-Option 1:
+#### Option 1:
 ----------
 SNPE (Qualcomm's Snapdragon Neural Processing Engine) uses the Hexagon DSP on the APQ8096 and is the right call for real-time on-device. The path is: PyTorch → ONNX → DLC (Qualcomm's format) → run via SNPE runtime. More involved setup.
 
-Option 2:
+#### Option 2:
 ----------
 Stream to ground skips the on-device compute problem entirely — send video over Microhard, run YOLO on your laptop. Simpler, but depends on link latency and whether Microhard bandwidth can carry the video.
 
