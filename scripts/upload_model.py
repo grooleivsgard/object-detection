@@ -3,8 +3,8 @@
 from huggingface_hub import HfApi
 from pathlib import Path
 
-HF_REPO = "grooleivsgard/object-detection-visdrone"
-WEIGHTS = Path("runs/train/visdrone/weights/best.pt")
+HF_REPO = "groelisabeth/object-detection-visdrone"
+WEIGHTS = Path("runs/detect/runs/train/visdrone/weights/best.pt")
 
 
 def upload() -> None:

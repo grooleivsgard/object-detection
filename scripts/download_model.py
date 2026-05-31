@@ -3,7 +3,7 @@
 from huggingface_hub import hf_hub_download
 from pathlib import Path
 
-HF_REPO = "grooleivsgard/object-detection-visdrone"
+HF_REPO = "groelisabeth/object-detection-visdrone"
 OUT_PATH = Path("best.pt")
 
 

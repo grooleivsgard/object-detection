@@ -1,7 +1,7 @@
 from ultralytics import YOLO
 import sys
 
-MODEL = "yolov8n.pt"  # nano — fast, small; swap for yolov8s/m/l/x for more accuracy
+MODEL = "runs/detect/runs/train/visdrone/weights/best.pt"  # nano — fast, small; swap for yolov8s/m/l/x for more accuracy
 
 
 def detect(source: str = "0") -> None:
